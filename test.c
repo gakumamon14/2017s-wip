@@ -10,6 +10,12 @@ struct eth {
 uint8_t mylookup(uint8_t *buf, uint16_t len, uint8_t sport) {
   struct eth *eth = (struct eth *)buf;
 
+
+ uint8_t bcast[6]={0xff,0xff,0xff,0xff,0xff,0xff};
+ 
+ if(memcmp(eth->dst,bcast,6)==0){
+    return VALE_BPF_BROADCAST;
+ }
   uint64_t key1=0;
   uint64_t key2=0;
   uint64_t val=0;
@@ -27,13 +33,8 @@ uint8_t mylookup(uint8_t *buf, uint16_t len, uint8_t sport) {
   *(s+6)=0;
   *(s+7)=0;
     
- val=vale_bpf_hash64_search_entry(key2);
- uint8_t bcast[6]={0xff,0xff,0xff,0xff,0xff,0xff};
- 
- if(memcmp(eth->dst,bcast,6)==0){
-    return VALE_BPF_BROADCAST;
- }
 
+ val=vale_bpf_hash64_search_entry(key2);
   //送信元のアドレスの有無をアドレステーブルを見て確認
   if(val==UINT64_MAX){
     vale_bpf_hash64_add_entry(key2,val);
