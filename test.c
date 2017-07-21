@@ -12,8 +12,15 @@ uint8_t mylookup(uint8_t *buf, uint16_t len, uint8_t sport) {
 
 
  uint8_t bcast[6]={0xff,0xff,0xff,0xff,0xff,0xff};
- 
- if(memcmp(eth->dst,bcast,6)==0){
+ int i=0;
+for( i=0;i<6;i++){
+  
+ if( eth->dst[i]==bcast[i]){
+ }else{
+   break;
+}
+}
+ if(i==6){
     return VALE_BPF_BROADCAST;
  }
   uint64_t key1=0;
