@@ -1,6 +1,5 @@
 #include <vale_bpf.h>
 #include <vale_bpf_ext_common.h>
-#define memcmp(p1, p2, s) __builtin_memcmp(p1, p2, s)
 struct eth {
   uint8_t dst[6];
   uint8_t src[6];
@@ -13,16 +12,16 @@ uint8_t mylookup(uint8_t *buf, uint16_t len, uint8_t sport) {
 
  uint8_t bcast[6]={0xff,0xff,0xff,0xff,0xff,0xff};
  int i=0;
-for( i=0;i<6;i++){
+ for( i=0;i<6;i++){
   
  if( eth->dst[i]==bcast[i]){
- }else{
-   break;
-}
-}
+  }else{
+    break;
+ }
+ }
  if(i==6){
     return VALE_BPF_BROADCAST;
- }
+  }
   uint64_t key1=0;
   uint64_t key2=0;
   uint64_t val=0;
